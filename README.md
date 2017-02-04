@@ -1,7 +1,7 @@
 # Docker Container for Logitech Media Server
 
 This is a Docker image for running the Logitech Media Server package
-(aka SqueezeboxServer).
+(aka SqueezeboxServer) on ARM.
 
 Run Directly:
 
@@ -14,4 +14,5 @@ Run Directly:
                -v <audio-dir>:/srv/music \
                larsks/logitech-media-server
 
+The original author is Lars Kellogg-Stedman <lars@oddbit.com> (https://github.com/larsks/docker-image-logitech-media-server). This is the ARM port.
 
