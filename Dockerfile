@@ -7,14 +7,36 @@ ENV LANG C.UTF-8
 ENV DEBIAN_FRONTEND noninteractive
 ENV PACKAGE_VERSION_URL=http://www.mysqueezebox.com/update/?version=${SQUEEZEBOX_VERSION}&revision=1&geturl=1&os=deb
 
+COPY bootstrap.pm.patch /tmp/bootstrap.pm.patch
+
+# http://www.imagineict.co.uk/squeezy-pi
 RUN apt-get update && \
-	apt-get -y --force-yes install curl wget faad flac lame sox libio-socket-ssl-perl tzdata iproute \
-              libjpeg8 libpng12-0 libgif4 libexif12 && \
+	apt-get -y --force-yes install curl wget lame libio-socket-ssl-perl tzdata iproute \
+              build-essential gcc-4.7 perl libstdc++6-4.7-dev && \
 	url=$(curl "$PACKAGE_VERSION_URL" | sed 's/_all\.deb/_amd64\.deb/') && \
 	curl -Lsf -o /tmp/logitechmediaserver.deb $url && \
-	dpkg -i /tmp/logitechmediaserver.deb && \
-	rm -f /tmp/logitechmediaserver.deb && \
+	dpkg -i /tmp/logitechmediaserver.deb \
+ && cd /tmp \
+ && wget -r -np -nH -nv –cut-dirs=6 -R index.html http://svn.slimdevices.com/repos/slim/7.8/trunk/vendor/ \
+ && cd repos/slim/7.8/trunk/vendor/CPAN \
+ && chmod +x buildme.sh \
+ && ./buildme.sh \
+ && cd faad2 && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
+ && cd flac && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
+ && cd sox && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
+ && cd .. \
+ && cp -r CPAN/build/arch/5.14/arm-linux-gnueabihf-thread-multi-64int /usr/share/squeezeboxserver/CPAN/arch/5.14/ \
+ && mv $(tar zxvf faad2/faad2-build-armv7l-34091.tgz --wildcards *bin/faad) /usr/share/squeezeboxserver/Bin/arm-linux/ \
+ && mv $(tar zxvf flac/flac-build-armv7l-34091.tgz --wildcards *bin/flac) /usr/share/squeezeboxserver/Bin/arm-linux/ \
+ && mv $(tar zxvf sox/sox-build-armv7l-34091.tgz --wildcards *bin/sox) /usr/share/squeezeboxserver/Bin/arm-linux \
+ && patch /usr/share/perl5/Slim/bootstrap.pm /tmp/bootstrap.pm.patch \
+ && ldconfig \
+ && rm /tmp/bootstrap.patch \\
+ && rm -rf /tmp/repos /tmp/bootstrap.patch \\
+	&& rm -f /tmp/logitechmediaserver.deb && \
+  apt-get remove -y build-essential gcc-4.7 libstdc++6-4.7-dev && \
 	apt-get clean
+
 
 RUN mkdir -p /config/etc && mv /etc/timezone /config/etc/ && ln -s /config/etc/timezone /etc/
 RUN echo "Europe/Zurich" > /config/etc/timezone
