@@ -21,12 +21,11 @@ RUN apt-get update && \
  && wget -r -np -nH -nv –cut-dirs=6 -R index.html http://svn.slimdevices.com/repos/slim/7.8/trunk/vendor/ | wc -l
 
 RUN cd /tmp/repos/slim/7.8/trunk/vendor/CPAN \
- && chmod +x buildme.sh \
- && ./buildme.sh
+ && bash buildme.sh
 
-RUN cd faad2 && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
- && cd flac && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
- && cd sox && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
+RUN cd faad2 && bash buildme-linux.sh && cd .. \
+ && cd flac && bash buildme-linux.sh && cd .. \
+ && cd sox && bash buildme-linux.sh && cd .. \
  && cd .. \
  && cp -r CPAN/build/arch/5.14/arm-linux-gnueabihf-thread-multi-64int /usr/share/squeezeboxserver/CPAN/arch/5.14/ \
  && mv $(tar zxvf faad2/faad2-build-armv7l-34091.tgz --wildcards *bin/faad) /usr/share/squeezeboxserver/Bin/arm-linux/ \
