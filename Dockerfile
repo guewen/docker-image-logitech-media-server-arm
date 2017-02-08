@@ -17,11 +17,14 @@ RUN apt-get update && \
 	curl -Lsf -o /tmp/logitechmediaserver.deb $url && \
 	dpkg -i /tmp/logitechmediaserver.deb \
  && cd /tmp \
- && wget -r -np -nH -nv –cut-dirs=6 -R index.html http://svn.slimdevices.com/repos/slim/7.8/trunk/vendor/ \
- && cd repos/slim/7.8/trunk/vendor/CPAN \
+ # the pipe to wc -l is there to inhibit wget errors because there is a 404 on a file
+ && wget -r -np -nH -nv –cut-dirs=6 -R index.html http://svn.slimdevices.com/repos/slim/7.8/trunk/vendor/ | wc -l
+
+RUN cd /tmp/repos/slim/7.8/trunk/vendor/CPAN \
  && chmod +x buildme.sh \
- && ./buildme.sh \
- && cd faad2 && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
+ && ./buildme.sh
+
+RUN cd faad2 && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
  && cd flac && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
  && cd sox && chmod +x buildme-linux.sh && ./buildme-linux.sh && cd .. \
  && cd .. \
