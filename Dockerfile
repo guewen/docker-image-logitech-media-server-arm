@@ -11,7 +11,7 @@ COPY bootstrap.pm.patch /tmp/bootstrap.pm.patch
 
 # http://www.imagineict.co.uk/squeezy-pi
 RUN apt-get update && \
-	apt-get -y --force-yes install curl wget lame libio-socket-ssl-perl tzdata iproute \
+	apt-get -y --force-yes install curl wget lame libio-socket-ssl-perl tzdata iproute rsync \
               build-essential gcc-4.7 perl libstdc++6-4.7-dev && \
 	url=$(curl "$PACKAGE_VERSION_URL" | sed 's/_all\.deb/_amd64\.deb/') && \
 	curl -Lsf -o /tmp/logitechmediaserver.deb $url && \
