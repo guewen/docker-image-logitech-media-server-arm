@@ -1,8 +1,6 @@
 #!/bin/sh
 
-if [ "$LOCAL_USER_ID" ] && [ -d "$LOCAL_USER_ID" ]; then
-  usermod -u $LOCAL_USER_ID squeezeboxserver
-fi
+sudo dpkg-reconfigure -f noninteractive tzdata
 
 if [ "$SQUEEZE_VOL" ] && [ -d "$SQUEEZE_VOL" ]; then
   for subdir in prefs logs cache; do
