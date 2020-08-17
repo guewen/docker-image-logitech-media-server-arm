@@ -5,7 +5,8 @@ name: Docker
 # but meanwhile, ensure that we pull the image often enough not to be deleted.
 on:
   schedule:
-    - cron: 0 0 1 * *
+    - cron: '0 0 1 * *'
+  repository_dispatch:
 
 env:
   IMAGE_NAME: guewen/logitech-media-server-raspbian:latest
