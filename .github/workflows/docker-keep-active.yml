@@ -1,0 +1,21 @@
+name: Docker
+# The image guewen/logitech-media-server-raspbian is removed after 6 months of inactivity.
+# I should build it more often, perhaps reintroduce a build using github actions as it was done in:
+# https://github.com/guewen/docker-image-logitech-media-server-raspbian/commit/e0954da9be930ae2584a5daaacc2f1cea163f589
+# but meanwhile, ensure that we pull the image often enough not to be deleted.
+on:
+  schedule:
+    - cron: 0 0 1 * *
+
+env:
+  IMAGE_NAME: guewen/logitech-media-server-raspbian:latest
+
+jobs:
+  # Pull image from Docker Hub to keep it active
+  pull:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Pull
+        run: docker pull $IMAGE_NAME
